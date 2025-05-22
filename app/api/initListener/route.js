@@ -1,10 +1,10 @@
-import { listenForMessages } from "@/lib/listenForMessages";
+import { listenForNewMessages } from "@/lib/listenForNewMessages";
 
 let initialized = false;
 
 export default async function handler(req, res) {
   if (!initialized) {
-    await listenForMessages();
+    await listenForNewMessages();
     initialized = true;
   }
 
