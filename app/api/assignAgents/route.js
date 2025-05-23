@@ -54,20 +54,18 @@ export async function POST(request) {
 
         const password = generatePassword();
 
-        const body = {
-            name,
-            companyName,
-            email,
-            password,
-            confirmPassword: password,
-        };
-
         const res = await fetch("https://gw.replix.space/account/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(body),
+            body: JSON.stringify({
+                Name: name,
+                CompanyName: companyName,
+                Email: email,
+                Password: password,
+                ConfirmPassword: password,
+            }),
         });
 
         const result = await res.json();
