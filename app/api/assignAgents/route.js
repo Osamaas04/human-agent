@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Agent } from "@/model/agent-model";
 import { createAssignedAgents } from "@/queries/assignAgents";
 import FormData from "form-data";
+import { dbConnect } from "@/lib/mongo";
 
 function generateEmail(name, company) {
   const cleanedName = name.toLowerCase().replace(/\s+/g, "");
@@ -32,6 +33,8 @@ export async function POST(request) {
   try {
     const { name, companyName } = await request.json();
 
+    await dbConnect();
+
     if (!name || !companyName) {
       return NextResponse.json(
         { error: "Name and companyName are required." },
@@ -41,7 +44,6 @@ export async function POST(request) {
 
     const email = generateEmail(name, companyName);
 
-    // Check if agent already exists
     const existingAgent = await Agent.findOne({ email });
     if (existingAgent) {
       return NextResponse.json(
