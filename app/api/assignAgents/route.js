@@ -60,7 +60,7 @@ export async function POST(request) {
         formData.append('Password', password);
         formData.append('ConfirmPassword', password);
 
-        console.log(Array.from(formData.entries())); 
+        console.log(formData); 
 
         const res = await fetch("https://gw.replix.space/account/register", {
             method: "POST",
