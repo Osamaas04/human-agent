@@ -68,6 +68,7 @@ export async function POST(request) {
     const res = await fetch("https://gw.replix.space/account/register", {
       method: "POST",
       credentials:"include",
+      headers: {"Content-Type" : "application/json"},
       body: formData,
     });
 
