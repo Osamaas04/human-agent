@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 let initialized = false;
 
-export const POST = async () => {
+export async function POST(request) {
   if (!initialized) {
     await listenForNewMessages();
     initialized = true;
