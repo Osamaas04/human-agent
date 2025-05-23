@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Agent } from "@/model/agent-model";
 import { createAssignedAgents } from "@/queries/assignAgents";
 import { dbConnect } from "@/lib/mongo";
+import { getUserIdFromToken } from "@/utils/getUserIdFromToken";
 
 function generateEmail(name, company) {
     const cleanedName = name.toLowerCase().replace(/\s+/g, "");
@@ -31,6 +32,8 @@ function generatePassword() {
 export async function POST(request) {
     try {
         const { name, companyName } = await request.json();
+
+        const userId = getUserIdFromToken(request)
 
         await dbConnect();
 
@@ -62,7 +65,7 @@ export async function POST(request) {
         const res = await fetch("https://gw.replix.space/account/register", {
             method: "POST",
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded", // Simpler format
+                "Content-Type": "application/x-www-form-urlencoded",
             },
             body: params.toString(),
         });
@@ -83,8 +86,7 @@ export async function POST(request) {
             return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
 
-        // Handle successful registration
-        await createAssignedAgents({ name, companyName, email });
+        await createAssignedAgents({ user_id: userId, name, companyName, email });
 
         return NextResponse.json({
             message: "Agent registered successfully.",
