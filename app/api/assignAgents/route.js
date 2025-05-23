@@ -43,7 +43,6 @@ export async function POST(request) {
         }
 
         const email = generateEmail(name, companyName);
-
         const existingAgent = await Agent.findOne({ email });
         if (existingAgent) {
             return NextResponse.json(
@@ -54,23 +53,21 @@ export async function POST(request) {
 
         const password = generatePassword();
 
+        const formData = new FormData();
+        formData.append('Name', name);
+        formData.append('CompanyName', companyName);
+        formData.append('Email', email);
+        formData.append('Password', password);
+        formData.append('ConfirmPassword', password);
+
         const res = await fetch("https://gw.replix.space/account/register", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                Name: name,
-                CompanyName: companyName,
-                Email: email,
-                Password: password,
-                ConfirmPassword: password,
-            }),
+            headers: formData.getHeaders(),
+            body: formData,
         });
 
-        const result = await res.json();
-
         if (!res.ok) {
+            const result = await res.json();
             return NextResponse.json(
                 { error: result.message || "Failed to register agent." },
                 { status: res.status }
