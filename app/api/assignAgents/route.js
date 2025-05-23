@@ -33,7 +33,11 @@ export async function POST(request) {
     try {
         const { name, companyName } = await request.json();
 
-        const userId = getUserIdFromToken(request)
+        const user_id = getUserIdFromToken(request)
+
+        if (!user_id) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         await dbConnect();
 
@@ -86,7 +90,7 @@ export async function POST(request) {
             return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
 
-        await createAssignedAgents({ user_id: userId, name, companyName, email });
+        await createAssignedAgents({ user_id, name, companyName, email, password });
 
         return NextResponse.json({
             message: "Agent registered successfully.",
