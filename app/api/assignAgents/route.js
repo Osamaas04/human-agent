@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { Agent } from "@/model/agent-model";
 import { createAssignedAgents } from "@/queries/assignAgents";
-import FormData from "form-data";
 import { dbConnect } from "@/lib/mongo";
 
 function generateEmail(name, company) {
@@ -53,19 +52,19 @@ export async function POST(request) {
 
         const password = generatePassword();
 
-        const formData = new FormData();
-        formData.append('Name', name);
-        formData.append('CompanyName', companyName);
-        formData.append('Email', email);
-        formData.append('Password', password);
-        formData.append('ConfirmPassword', password);
-
-        console.log(formData); 
+        const params = new URLSearchParams();
+        params.append("Name", name);
+        params.append("CompanyName", companyName);
+        params.append("Email", email);
+        params.append("Password", password);
+        params.append("ConfirmPassword", password);
 
         const res = await fetch("https://gw.replix.space/account/register", {
             method: "POST",
-            headers: formData.getHeaders(),
-            body: formData,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded", // Simpler format
+            },
+            body: params.toString(),
         });
 
         if (!res.ok) {
