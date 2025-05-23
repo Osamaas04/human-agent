@@ -53,17 +53,22 @@ export async function POST(request) {
     }
 
     const password = generatePassword();
+    console.log(name)
+    console.log(companyName)
+    console.log(email)
+    console.log(password)
 
-    const form = new FormData();
-    form.append("name", name);
-    form.append("companyName", companyName);
-    form.append("email", email);
-    form.append("password", password);
-    form.append("confirmPassword", password);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("companyName", companyName);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("confirmPassword", password);
 
     const res = await fetch("https://gw.replix.space/account/register", {
       method: "POST",
-      body: form,
+      credentials:"include",
+      body: formData,
     });
 
     const result = await res.json();
