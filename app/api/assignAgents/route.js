@@ -68,13 +68,22 @@ export async function POST(request) {
         });
 
         if (!res.ok) {
-            const result = await res.json();
-            return NextResponse.json(
-                { error: result.message || "Failed to register agent." },
-                { status: res.status }
-            );
+            const contentType = res.headers.get("content-type");
+            let errorMessage = "Failed to register agent.";
+
+            if (contentType && contentType.includes("application/json")) {
+                const result = await res.json();
+                errorMessage = result.message || errorMessage;
+            } else {
+                const text = await res.text();
+                console.error("Non-JSON response:", text);
+                errorMessage = text || errorMessage;
+            }
+
+            return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
 
+        // Handle successful registration
         await createAssignedAgents({ name, companyName, email });
 
         return NextResponse.json({
@@ -83,6 +92,9 @@ export async function POST(request) {
         });
     } catch (err) {
         console.error(err);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
     }
 }
