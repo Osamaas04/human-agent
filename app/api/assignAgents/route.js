@@ -96,7 +96,7 @@ export async function POST(request) {
 
         return NextResponse.json({
             message: "Agent registered successfully.",
-            agent: { name, email, password },
+            agent: { name, email, password, status: "offline" },
         });
     } catch (err) {
         console.error(err);
