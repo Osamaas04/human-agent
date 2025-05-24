@@ -19,8 +19,9 @@ function generatePassword() {
 
     let password = "";
     password += upper[Math.floor(Math.random() * upper.length)];
-    password += special[Math.floor(Math.random() * special.length)];
+    password += lower[Math.floor(Math.random() * lower.length)];
     password += numbers[Math.floor(Math.random() * numbers.length)];
+    password += special[Math.floor(Math.random() * special.length)];
 
     while (password.length < 8) {
         password += allChars[Math.floor(Math.random() * allChars.length)];
@@ -28,6 +29,7 @@ function generatePassword() {
 
     return password.split("").sort(() => 0.5 - Math.random()).join("");
 }
+
 
 export async function POST(request) {
     try {
