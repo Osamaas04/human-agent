@@ -31,6 +31,7 @@ const messageSchema = new mongoose.Schema({
     required: true,
   },
   userId: { type: String, required: true },
+  assignedAgentId: { type: String, default: null },
 });
 
 export const Message = mongoose.models.Message || mongoose.model("Message", messageSchema);
