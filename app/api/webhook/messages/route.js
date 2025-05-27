@@ -10,7 +10,6 @@ export async function POST(request) {
     const message = await request.json();
     console.log("📨 Webhook received message");
 
-    // Find eligible agents
     const agents = await Agent.find({
       $or: [
         { status: "idle" },
@@ -28,13 +27,11 @@ export async function POST(request) {
 
     const selected = agents[0];
 
-    // Update the message in DB with assigned agent
     await Message.findByIdAndUpdate(message._id, {
       assignedAgentId: selected.user_id,
       status: MessageStatus.ASSIGNED,
     });
 
-    // Update the agent's load
     await Agent.updateOne(
       { user_id: selected.user_id },
       {
@@ -44,11 +41,9 @@ export async function POST(request) {
       }
     );
 
-    console.log(`✅ Assigned to agent: ${selected.name}`);
-
     return NextResponse.json({ assignedTo: selected.user_id });
   } catch (error) {
     console.error("❌ Webhook error:", error);
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
