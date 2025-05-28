@@ -28,7 +28,7 @@ export async function POST(request) {
     const selected = agents[0];
 
     await Message.findByIdAndUpdate(message._id, {
-      assignedAgentId: selected.user_id,
+      assignedAgentId: selected.agentId,
       status: MessageStatus.ASSIGNED,
     });
 
