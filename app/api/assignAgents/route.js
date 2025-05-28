@@ -76,15 +76,19 @@ export async function POST(request) {
             body: params.toString(),
         });
 
+        console.log("res:",res)
+
         if (!res.ok) {
             const contentType = res.headers.get("content-type");
             let errorMessage = "Failed to register agent.";
 
             if (contentType && contentType.includes("application/json")) {
                 const result = await res.json();
+                console.log("result:", result)
                 errorMessage = result.message || errorMessage;
             } else {
                 const text = await res.text();
+                console.log("text:", text)
                 console.error("Non-JSON response:", text);
                 errorMessage = text || errorMessage;
             }
@@ -92,8 +96,6 @@ export async function POST(request) {
             return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
 
-        console.log(res)
-        
         await createAssignedAgents({ user_id, name, companyName, email, password });
 
         return NextResponse.json({
