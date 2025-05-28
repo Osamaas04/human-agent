@@ -76,7 +76,7 @@ export async function POST(request) {
             body: params.toString(),
         });
 
-        const responseText = await res.text(); 
+        const responseText = await res.text();
 
         if (!res.ok) {
             const contentType = res.headers.get("content-type");
@@ -96,7 +96,17 @@ export async function POST(request) {
             return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
 
-        await createAssignedAgents({ user_id, name, companyName, email, password, agentId: responseText.userId });
+        const result = JSON.parse(responseText);
+
+        await createAssignedAgents({
+            user_id,
+            name,
+            companyName,
+            email,
+            password,
+            agentId: result.userId
+        });
+
 
         return NextResponse.json({
             message: "Agent registered successfully.",
