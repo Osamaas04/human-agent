@@ -31,6 +31,9 @@ const messageSchema = new mongoose.Schema({
     required: true,
   },
   userId: { type: String, required: true },
+  fullName: { type: String, required: true },
+  ProfilePicture: { type: String, required: true },
+  caseNumber: { type: String, required: true },
   assignedAgentId: { type: String, default: null },
 });
 
