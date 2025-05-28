@@ -34,8 +34,7 @@ function generatePassword() {
 export async function POST(request) {
     try {
         const { name, companyName } = await request.json();
-
-        const user_id = getUserIdFromToken(request)
+        const user_id = getUserIdFromToken(request);
 
         if (!user_id) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -76,23 +75,28 @@ export async function POST(request) {
             body: params.toString(),
         });
 
+        const contentType = res.headers.get("content-type");
+        let result;
+
+        if (contentType && contentType.includes("application/json")) {
+            result = await res.json();
+        } else {
+            const text = await res.text();
+            console.error("Non-JSON response:", text);
+            return NextResponse.json({ error: "Unexpected non-JSON response from registration API" }, { status: 500 });
+        }
+
         if (!res.ok) {
-            const contentType = res.headers.get("content-type");
-            let errorMessage = "Failed to register agent.";
-
-            if (contentType && contentType.includes("application/json")) {
-                const result = await res.json();
-                errorMessage = result.message || errorMessage;
-            } else {
-                const text = await res.text();
-                console.error("Non-JSON response:", text);
-                errorMessage = text || errorMessage;
-            }
-
+            const errorMessage = result?.message || "Failed to register agent.";
             return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
 
-        await createAssignedAgents({ user_id, name, companyName, email, password });
+        const assignedAgentId = result?.userId;
+        if (!assignedAgentId) {
+            return NextResponse.json({ error: "userId not returned by registration API" }, { status: 500 });
+        }
+
+        await createAssignedAgents({ user_id, name, companyName, email, password, assignedAgentId });
 
         return NextResponse.json({
             message: "Agent registered successfully.",

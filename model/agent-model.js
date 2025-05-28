@@ -5,6 +5,10 @@ const agentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    assignedAgentId: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true,
