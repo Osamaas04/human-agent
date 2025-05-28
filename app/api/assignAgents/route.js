@@ -77,7 +77,6 @@ export async function POST(request) {
         });
 
         const responseText = await res.text(); 
-        console.log("Raw response text:", responseText);
 
         if (!res.ok) {
             const contentType = res.headers.get("content-type");
@@ -97,7 +96,7 @@ export async function POST(request) {
             return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
 
-        await createAssignedAgents({ user_id, name, companyName, email, password });
+        await createAssignedAgents({ user_id, name, companyName, email, password, agentId: responseText.userId });
 
         return NextResponse.json({
             message: "Agent registered successfully.",
