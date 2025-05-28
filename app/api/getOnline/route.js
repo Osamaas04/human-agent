@@ -20,7 +20,7 @@ export async function POST(request) {
     await dbConnect();
 
     const updatedAgent = await Agent.findOneAndUpdate(
-      { user_id },
+      { agentId: user_id },
       { status },
       { new: true }
     );
