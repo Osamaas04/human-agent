@@ -91,8 +91,6 @@ export async function POST(request) {
 
             return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
-        const result = await res.json();
-        console.log("result:",result)
         const text = await res.text();
         console.log("text:",text)
         
