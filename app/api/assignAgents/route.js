@@ -76,7 +76,8 @@ export async function POST(request) {
             body: params.toString(),
         });
 
-        console.log("res:",res)
+        const responseText = await res.text(); 
+        console.log("Raw response text:", responseText);
 
         if (!res.ok) {
             const contentType = res.headers.get("content-type");

@@ -5,7 +5,7 @@ const agentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    assignedAgentId: {
+    agentId: {
         type: String,
         default: null
     },
