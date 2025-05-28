@@ -91,8 +91,8 @@ export async function POST(request) {
 
             return NextResponse.json({ error: errorMessage }, { status: res.status });
         }
-        const text = await res.text();
-        console.log("text:",text)
+
+        console.log(res)
         
         await createAssignedAgents({ user_id, name, companyName, email, password });
 
